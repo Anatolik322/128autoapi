@@ -50,9 +50,9 @@ app.post('/email_order', async (req, res) => {
 
         const mailOptions = {
             from: 'noreply.shop',
-            to: "anatoliysynecun2016@gmail.com",
-            subject: 'Підтвердження замовлення',
-            text: `Дякуємо за ваше замовлення, !Ваше замовленняrrrrrrr:`
+            to: "128packworks@gmail.com",
+            subject: 'Нове замовлення',
+            text: JSON.stringify(req)
         };
 
         await transporter.sendMail(mailOptions);
