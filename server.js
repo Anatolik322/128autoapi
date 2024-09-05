@@ -53,32 +53,44 @@ app.post('/email_order', async (req, res) => {
             to: "128packworks@gmail.com",
             subject: 'Нове замовлення',
             html: `
-            <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-                <h2 style="text-align: center; color: #f28a0a;">Деталі Замовлення</h2>
-                <p><strong>Прізвище:</strong> ${req.body.lastName}</p>
-                <p><strong>Ім'я:</strong> ${req.body.firstName}</p>
-                <p><strong>По батькові:</strong> ${req.body.middleName}</p>
-                <p><strong>Email:</strong> ${req.body.email}</p>
-                <p><strong>Телефон:</strong> ${req.body.phone}</p>
-                <p><strong>Адреса:</strong> ${req.body.address}</p>
-                <p><strong>Номер відділення:</strong> ${req.body.branchNumber}</p>
-    
-                <h3 style="color: #f28a0a;">Замовлені товари:</h3>
-                <ul style="padding-left: 20px;">
-                    ${req.body.cart.map(item => `
-                        <li>
-                            <p><strong>Назва:</strong> ${item.name}</p>
-                            <p><strong>Кількість:</strong> ${item.quantity}</p>
-                            <p><strong>Ціна:</strong> ${item.price} грн</p>
-                            <p><strong>Артикул:</strong> ${item.sku} грн</p>
-                        </li>
-                        <hr style="border: none; border-top: 1px solid #ddd;" />
-                    `).join('')}
-                </ul>
-    
-                <p><strong>Загальна сума:</strong> ${req.body.cart.reduce((total, item) => total + item.price * item.quantity, 0)} грн</p>
-            </div>
-        `,
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <h2 style="text-align: center; color: #f28a0a;">Деталі Замовлення</h2>
+        <p><strong>Прізвище:</strong> ${req.body.lastName}</p>
+        <p><strong>Ім'я:</strong> ${req.body.firstName}</p>
+        <p><strong>По батькові:</strong> ${req.body.middleName}</p>
+        <p><strong>Email:</strong> ${req.body.email}</p>
+        <p><strong>Телефон:</strong> ${req.body.phone}</p>
+        <p><strong>Адреса:</strong> ${req.body.address}</p>
+        <p><strong>Номер відділення:</strong> ${req.body.branchNumber}</p>
+
+        <h3 style="color: #f28a0a;">Замовлені товари:</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+            <thead>
+                <tr style="background-color: #f28a0a; color: white;">
+                    <th style="padding: 8px; border: 1px solid #ddd;">Назва</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Кількість</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Ціна за одиницю</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Артикул</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Сума</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${req.body.cart.map(item => `
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${item.name}</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${item.quantity}</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${item.price} грн</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${item.sku}</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${item.price * item.quantity} грн</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+
+        <p style="margin-top: 10px;"><strong>Загальна сума:</strong> ${req.body.cart.reduce((total, item) => total + item.price * item.quantity, 0)} грн</p>
+    </div>
+`
+
         };
 
         await transporter.sendMail(mailOptions);
