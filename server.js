@@ -198,6 +198,7 @@ app.post('/items', async (req, res) => {
             dropPrice: req.body.dropPrice,
             description: req.body.description,
             category: req.body.category,
+            categoryUkr: req.body.categoryUkr,
             stock: req.body.stock,
             brand: req.body.brand,
             rating: req.body.rating || 4.8,
