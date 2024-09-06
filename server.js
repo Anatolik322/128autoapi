@@ -189,4 +189,28 @@ app.get('/items/:id', async (req, res) => {
     }
 });
 
+app.post('/items', async (req, res) => {
+    try {
+        const newItem = new Item({
+            name: req.body.name,
+            price: req.body.price,
+            discountedPrice: req.body.discountedPrice,
+            dropPrice: req.body.dropPrice,
+            description: req.body.description,
+            category: req.body.category,
+            stock: req.body.stock,
+            brand: req.body.brand,
+            rating: req.body.rating || 4.8,
+            sku: req.body.sku,
+            images: req.body.images || [], // Якщо немає зображень, встановлюємо порожній масив
+            reviews: req.body.reviews || [], // Якщо немає відгуків, встановлюємо порожній масив
+        });
+
+        const savedItem = await newItem.save();
+        res.status(201).json(savedItem);
+    } catch (error) {
+        res.status(500).json({ message: 'Помилка при додаванні товару', error });
+    }
+});
+
 app.listen(PORT, console.log("Server is running on port ", PORT))
