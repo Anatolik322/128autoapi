@@ -81,7 +81,7 @@ app.post('/email_order', async (req, res) => {
                         <td style="padding: 8px; border: 1px solid #ddd;">${item.quantity}</td>
                         <td style="padding: 8px; border: 1px solid #ddd;">${item.discountedPrice ? item.discountedPrice : item.price} грн</td>
                         <td style="padding: 8px; border: 1px solid #ddd;">${item.sku}</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">${item.price * item.quantity} грн</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${item.discountedPrice ? item.discountedPrice : item.price * item.quantity} грн</td>
                     </tr>
                 `).join('')}
             </tbody>
@@ -140,7 +140,7 @@ app.post('/send_thank_you_email', async (req, res) => {
                         <td style="padding: 8px; border: 1px solid #ddd;">${item.name}</td>
                         <td style="padding: 8px; border: 1px solid #ddd;">${item.quantity}</td>
                         <td style="padding: 8px; border: 1px solid #ddd;">${item.discountedPrice ? item.discountedPrice : item.price} грн</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">${item.price * item.quantity} грн</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${item.discountedPrice ? item.discountedPrice : item.price * item.quantity} грн</td>
                     </tr>
                 `).join('')}
             </tbody>
