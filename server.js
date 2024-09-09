@@ -79,7 +79,7 @@ app.post('/email_order', async (req, res) => {
                     <tr>
                         <td style="padding: 8px; border: 1px solid #ddd;">${item.name}</td>
                         <td style="padding: 8px; border: 1px solid #ddd;">${item.quantity}</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">${item.price} грн</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${item.discountedPrice ? item.discountedPrice : item.price} грн</td>
                         <td style="padding: 8px; border: 1px solid #ddd;">${item.sku}</td>
                         <td style="padding: 8px; border: 1px solid #ddd;">${item.price * item.quantity} грн</td>
                     </tr>
@@ -87,7 +87,7 @@ app.post('/email_order', async (req, res) => {
             </tbody>
         </table>
 
-        <p style="margin-top: 10px;"><strong>Загальна сума:</strong> ${req.body.cart.reduce((total, item) => total + item.price * item.quantity, 0)} грн</p>
+        <p style="margin-top: 10px;"><strong>Загальна сума:</strong> ${req.body.cart.reduce((total, item) => total + (item.discountedPrice ? item.discountedPrice : item.price) * item.quantity, 0)} грн</p>
     </div>
 `
 
@@ -139,15 +139,16 @@ app.post('/send_thank_you_email', async (req, res) => {
                     <tr>
                         <td style="padding: 8px; border: 1px solid #ddd;">${item.name}</td>
                         <td style="padding: 8px; border: 1px solid #ddd;">${item.quantity}</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">${item.price} грн</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${item.discountedPrice ? item.discountedPrice : item.price} грн</td>
                         <td style="padding: 8px; border: 1px solid #ddd;">${item.price * item.quantity} грн</td>
                     </tr>
                 `).join('')}
             </tbody>
         </table>
 
-        <p style="margin-top: 10px;"><strong>Загальна сума:</strong> ${req.body.cart.reduce((total, item) => total + item.price * item.quantity, 0)} грн</p>
+        <p style="margin-top: 10px;"><strong>Загальна сума:</strong> ${req.body.cart.reduce((total, item) => total + (item.discountedPrice ? item.discountedPrice : item.price) * item.quantity, 0)} грн</p>
         <p>Якщо у вас виникнуть питання щодо замовлення, не соромтеся зв’язатися з нами.</p>
+        <p>128packworks@gmail.com</p>
         <p>З найкращими побажаннями,</p>
         <p>Команда магазину</p>
     </div>
