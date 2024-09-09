@@ -102,6 +102,66 @@ app.post('/email_order', async (req, res) => {
     }
 });
 
+app.post('/send_thank_you_email', async (req, res) => {
+    try {
+        const transporter = nodemailer.createTransport({
+            host: "smtp.zoho.com",
+            service: 'gmail',
+            secure: true,
+            auth: {
+                user: '128packworks@gmail.com',
+                pass: 'tjsi yrex cppx qdul'
+            }
+        });
+
+        const mailOptions = {
+            from: 'noreply.shop',
+            to: req.body.email,
+            subject: 'Дякуємо за ваше замовлення!',
+            html: `
+    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+        <h2 style="text-align: center; color: #f28a0a;">Дякуємо за ваше замовлення!</h2>
+        <p>Шановний(а) ${req.body.firstName},</p>
+        <p>Ми вдячні, що ви обрали наш магазин. Ваше замовлення було успішно отримане і наразі обробляється.</p>
+        
+        <h3 style="color: #f28a0a;">Замовлені товари:</h3>
+        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+            <thead>
+                <tr style="background-color: #f28a0a; color: white;">
+                    <th style="padding: 8px; border: 1px solid #ddd;">Назва</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Кількість</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Ціна за одиницю</th>
+                    <th style="padding: 8px; border: 1px solid #ddd;">Сума</th>
+                </tr>
+            </thead>
+            <tbody>
+                ${req.body.cart.map(item => `
+                    <tr>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${item.name}</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${item.quantity}</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${item.price} грн</td>
+                        <td style="padding: 8px; border: 1px solid #ddd;">${item.price * item.quantity} грн</td>
+                    </tr>
+                `).join('')}
+            </tbody>
+        </table>
+
+        <p style="margin-top: 10px;"><strong>Загальна сума:</strong> ${req.body.cart.reduce((total, item) => total + item.price * item.quantity, 0)} грн</p>
+        <p>Якщо у вас виникнуть питання щодо замовлення, не соромтеся зв’язатися з нами.</p>
+        <p>З найкращими побажаннями,</p>
+        <p>Команда магазину</p>
+    </div>
+`
+        };
+
+        await transporter.sendMail(mailOptions);
+
+        res.status(200).json({ message: 'Лист подяки успішно надіслано!', status: 200 });
+    } catch (error) {
+        console.error('Помилка надсилання листа:', error);
+        res.status(500).json({ message: 'Сталася помилка під час надсилання листа.' });
+    }
+});
 
 
 app.get('/items', async (req, res) => {
