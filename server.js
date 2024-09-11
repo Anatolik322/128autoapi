@@ -174,9 +174,22 @@ app.get('/items', async (req, res) => {
     }
 });
 
+app.post('/search', async (req, res) => {
+    const { name } = req.body;
+
+    try {
+        const products = await Item.find({
+            name: { $regex: name, $options: 'i' },
+        });
+        res.json(products);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
+    }
+});
+
 app.get('/homeitems', async (req, res) => {
     try {
-        const items = await Item.find().limit(6);
+        const items = await Item.find().limit(6).skip(7);
         res.json(items);
     } catch (error) {
         res.status(500).json({ message: 'Помилка при отриманні даних', error });
