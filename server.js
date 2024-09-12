@@ -53,43 +53,42 @@ app.post('/email_order', async (req, res) => {
             to: "128packworks@gmail.com",
             subject: 'Нове замовлення',
             html: `
-    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-        <h2 style="text-align: center; color: #f28a0a;">Деталі Замовлення</h2>
-        <p><strong>Прізвище:</strong> ${req.body.lastName}</p>
-        <p><strong>Ім'я:</strong> ${req.body.firstName}</p>
-        <p><strong>По батькові:</strong> ${req.body.middleName}</p>
-        <p><strong>Email:</strong> ${req.body.email}</p>
-        <p><strong>Телефон:</strong> ${req.body.phone}</p>
-        <p><strong>Адреса:</strong> ${req.body.address}</p>
-        <p><strong>Номер відділення:</strong> ${req.body.branchNumber}</p>
+            <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                <h2 style="text-align: center; color: #f28a0a;">Деталі Замовлення</h2>
+                <p><strong>Прізвище:</strong> ${req.body.lastName}</p>
+                <p><strong>Ім'я:</strong> ${req.body.firstName}</p>
+                <p><strong>По батькові:</strong> ${req.body.middleName}</p>
+                <p><strong>Email:</strong> ${req.body.email}</p>
+                <p><strong>Телефон:</strong> ${req.body.phone}</p>
+                <p><strong>Адреса:</strong> ${req.body.address}</p>
+                <p><strong>Номер відділення:</strong> ${req.body.branchNumber}</p>
 
-        <h3 style="color: #f28a0a;">Замовлені товари:</h3>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-            <thead>
-                <tr style="background-color: #f28a0a; color: white;">
-                    <th style="padding: 8px; border: 1px solid #ddd;">Назва</th>
-                    <th style="padding: 8px; border: 1px solid #ddd;">Кількість</th>
-                    <th style="padding: 8px; border: 1px solid #ddd;">Ціна за одиницю</th>
-                    <th style="padding: 8px; border: 1px solid #ddd;">Артикул</th>
-                    <th style="padding: 8px; border: 1px solid #ddd;">Сума</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${req.body.cart.map(item => `
-                    <tr>
-                        <td style="padding: 8px; border: 1px solid #ddd;">${item.name}</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">${item.quantity}</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">${item.discountedPrice ? item.discountedPrice : item.price} грн</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">${item.sku}</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">${item.discountedPrice ? item.discountedPrice : item.price * item.quantity} грн</td>
-                    </tr>
-                `).join('')}
-            </tbody>
-        </table>
+                <h3 style="color: #f28a0a;">Замовлені товари:</h3>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                    <thead>
+                        <tr style="background-color: #f28a0a; color: white;">
+                            <th style="padding: 8px; border: 1px solid #ddd;">Назва</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Кількість</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Ціна за одиницю</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Артикул</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Сума</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${req.body.cart.map(item => `
+                            <tr>
+                                <td style="padding: 8px; border: 1px solid #ddd;">${item.name}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;">${item.quantity}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;">${item.discountedPrice ? item.discountedPrice : item.price} грн</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;">${item.sku}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;">${item.discountedPrice ? item.discountedPrice : item.price * item.quantity} грн</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
 
-        <p style="margin-top: 10px;"><strong>Загальна сума:</strong> ${req.body.cart.reduce((total, item) => total + (item.discountedPrice ? item.discountedPrice : item.price) * item.quantity, 0)} грн</p>
-    </div>
-`
+                <p style="margin-top: 10px;"><strong>Загальна сума:</strong> ${req.body.cart.reduce((total, item) => total + (item.discountedPrice ? item.discountedPrice : item.price) * item.quantity, 0)} грн</p>
+            </div>`
 
         };
 
@@ -119,40 +118,39 @@ app.post('/send_thank_you_email', async (req, res) => {
             to: req.body.email,
             subject: 'Дякуємо за ваше замовлення!',
             html: `
-    <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
-        <h2 style="text-align: center; color: #f28a0a;">Дякуємо за ваше замовлення!</h2>
-        <p>Шановний(а) ${req.body.firstName},</p>
-        <p>Ми вдячні, що ви обрали наш магазин. Ваше замовлення було успішно отримане і наразі обробляється.</p>
-        
-        <h3 style="color: #f28a0a;">Замовлені товари:</h3>
-        <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
-            <thead>
-                <tr style="background-color: #f28a0a; color: white;">
-                    <th style="padding: 8px; border: 1px solid #ddd;">Назва</th>
-                    <th style="padding: 8px; border: 1px solid #ddd;">Кількість</th>
-                    <th style="padding: 8px; border: 1px solid #ddd;">Ціна за одиницю</th>
-                    <th style="padding: 8px; border: 1px solid #ddd;">Сума</th>
-                </tr>
-            </thead>
-            <tbody>
-                ${req.body.cart.map(item => `
-                    <tr>
-                        <td style="padding: 8px; border: 1px solid #ddd;">${item.name}</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">${item.quantity}</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">${item.discountedPrice ? item.discountedPrice : item.price} грн</td>
-                        <td style="padding: 8px; border: 1px solid #ddd;">${item.discountedPrice ? item.discountedPrice : item.price * item.quantity} грн</td>
-                    </tr>
-                `).join('')}
-            </tbody>
-        </table>
+            <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                <h2 style="text-align: center; color: #f28a0a;">Дякуємо за ваше замовлення!</h2>
+                <p>Шановний(а) ${req.body.firstName},</p>
+                <p>Ми вдячні, що ви обрали наш магазин. Ваше замовлення було успішно отримане і наразі обробляється.</p>
+                
+                <h3 style="color: #f28a0a;">Замовлені товари:</h3>
+                <table style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+                    <thead>
+                        <tr style="background-color: #f28a0a; color: white;">
+                            <th style="padding: 8px; border: 1px solid #ddd;">Назва</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Кількість</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Ціна за одиницю</th>
+                            <th style="padding: 8px; border: 1px solid #ddd;">Сума</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${req.body.cart.map(item => `
+                            <tr>
+                                <td style="padding: 8px; border: 1px solid #ddd;">${item.name}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;">${item.quantity}</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;">${item.discountedPrice ? item.discountedPrice : item.price} грн</td>
+                                <td style="padding: 8px; border: 1px solid #ddd;">${item.discountedPrice ? item.discountedPrice : item.price * item.quantity} грн</td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
 
-        <p style="margin-top: 10px;"><strong>Загальна сума:</strong> ${req.body.cart.reduce((total, item) => total + (item.discountedPrice ? item.discountedPrice : item.price) * item.quantity, 0)} грн</p>
-        <p>Якщо у вас виникнуть питання щодо замовлення, не соромтеся зв’язатися з нами.</p>
-        <p>128packworks@gmail.com</p>
-        <p>З найкращими побажаннями,</p>
-        <p>Команда магазину</p>
-    </div>
-`
+                <p style="margin-top: 10px;"><strong>Загальна сума:</strong> ${req.body.cart.reduce((total, item) => total + (item.discountedPrice ? item.discountedPrice : item.price) * item.quantity, 0)} грн</p>
+                <p>Якщо у вас виникнуть питання щодо замовлення, не соромтеся зв’язатися з нами.</p>
+                <p>128packworks@gmail.com</p>
+                <p>З найкращими побажаннями,</p>
+                <p>Команда магазину</p>
+            </div>`
         };
 
         await transporter.sendMail(mailOptions);
@@ -218,6 +216,15 @@ app.get('/category/:category', async (req, res) => {
     }
 });
 
+app.get('/semilar/:category', async (req, res) => {
+    try {
+        const category = req.params.category;
+        const items = await Item.find({ category }).limit(6);
+        res.json(items);
+    } catch (error) {
+        res.status(500).json({ message: 'Помилка при отриманні даних', error });
+    }
+});
 
 // =====================КАТЕГОРІЇ=======================================================
 app.get('/items/categories', async (req, res) => {
