@@ -172,16 +172,21 @@ app.get('/items', async (req, res) => {
     }
 });
 
-app.post('/search', async (req, res) => {
-    const { name } = req.body;
+app.get('/search', async (req, res) => {
+    const { name } = req.query;
+
+    if (!name || name.length < 2) {
+        return res.status(400).json({ message: 'Запит повинен містити хоча б 2 символи' });
+    }
 
     try {
         const products = await Item.find({
             name: { $regex: name, $options: 'i' },
-        });
+        }).limit(10);
+
         res.json(products);
     } catch (err) {
-        res.status(500).json({ message: err.message });
+        res.status(500).json({ message: 'Виникла помилка на сервері', error: err.message });
     }
 });
 
