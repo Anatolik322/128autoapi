@@ -214,7 +214,7 @@ app.get('/homeitems', async (req, res) => {
 app.get('/category/:category', async (req, res) => {
     try {
         const category = req.params.category;
-        const items = await Item.find({ category }).sort({ price: -1 });
+        const items = await Item.find({ category });
         res.json(items);
     } catch (error) {
         res.status(500).json({ message: 'Помилка при отриманні даних', error });
