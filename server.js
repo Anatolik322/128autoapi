@@ -192,7 +192,7 @@ app.get('/search', async (req, res) => {
 
 app.get('/homeitems', async (req, res) => {
     try {
-        const items = await Item.find().limit(6).skip(7);
+        const items = await Item.find().limit(6).skip(13);
         res.json(items);
     } catch (error) {
         res.status(500).json({ message: 'Помилка при отриманні даних', error });
@@ -200,15 +200,6 @@ app.get('/homeitems', async (req, res) => {
 });
 
 
-// app.get('/users', async (req, res) => {
-//     try {
-//         const people = await People.find();
-//         res.json(people);
-//     } catch (error) {
-//         console.error('Помилка при отриманні даних:', error);
-//         res.status(500).json({ message: 'Помилка при отриманні даних', error });
-//     }
-// });
 
 // =====================ТОВАРИ В КАТЕГОРІЇ=======================================================
 app.get('/category/:category', async (req, res) => {
