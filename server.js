@@ -164,9 +164,22 @@ app.post('/send_thank_you_email', async (req, res) => {
 
 
 app.get('/items', async (req, res) => {
+    const { page = 1, limit = 10 } = req.query;
+    const pageNum = parseInt(page, 10);
+    const limitNum = parseInt(limit, 10);
+
     try {
-        const items = await Item.find();
-        res.json(items);
+        const items = await Item.find()
+            .skip((pageNum - 1) * limitNum)
+            .limit(limitNum);
+
+        const totalItems = await Item.countDocuments();
+        res.json({
+            items,
+            totalItems,
+            totalPages: Math.ceil(totalItems / limitNum),
+            currentPage: pageNum,
+        });
     } catch (error) {
         res.status(500).json({ message: 'Помилка при отриманні даних', error });
     }
@@ -288,6 +301,28 @@ app.post('/items', async (req, res) => {
         res.status(201).json(savedItem);
     } catch (error) {
         res.status(500).json({ message: 'Помилка при додаванні товару', error });
+    }
+});
+
+app.patch('/items/:id', async (req, res) => {
+    const { id } = req.params;
+    const updatedData = req.body;
+
+    try {
+        const updatedItem = await Item.findByIdAndUpdate(
+            id,
+            { $set: updatedData },
+            { new: true, runValidators: true }
+        );
+
+        if (!updatedItem) {
+            return res.status(404).json({ message: 'Товар не знайдено' });
+        }
+
+        res.json({ message: 'Товар успішно оновлено', item: updatedItem });
+    } catch (error) {
+        console.error('Помилка при редагуванні товару:', error);
+        res.status(500).json({ message: 'Помилка сервера' });
     }
 });
 
