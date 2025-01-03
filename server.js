@@ -35,6 +35,27 @@ app.post('/order', async (req, res) => {
     }
 });
 
+app.get('/orders', async (req, res) => {
+    const { page = 1, limit = 10 } = req.query;
+    const pageNum = parseInt(page, 10);
+    const limitNum = parseInt(limit, 10);
+    try {
+        const orders = await Order.find()
+            .skip((pageNum - 1) * limitNum)
+            .limit(limitNum);
+
+        const totalItems = await Order.countDocuments();
+        res.json({
+            orders,
+            totalItems,
+            totalPages: Math.ceil(totalItems / limitNum),
+            currentPage: pageNum,
+        });
+    } catch (error) {
+        res.status(500).json({ message: 'Помилка при отриманні даних', error });
+    }
+})
+
 app.post('/email_order', async (req, res) => {
 
     try {
