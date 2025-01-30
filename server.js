@@ -9,6 +9,7 @@ const PORT = process.env.PORT || 5000
 const Item = require('./models/itemsModel');
 const People = require('./models/peopleModel');
 const Order = require('./models/ordersModel');
+const Promo = require('./models/promeModel');
 
 
 
@@ -75,6 +76,7 @@ app.post('/email_order', async (req, res) => {
             subject: 'Нове замовлення',
             html: `
             <div style="font-family: Arial, sans-serif; line-height: 1.6; color: #333;">
+                ${req.body.discount && `<h1>ЗАСТОСОВАНО ПРОМОКОД ${req.body.discount.promo.code} сума: ${req.body.discount.promo.amount}</h1>`}
                 <h2 style="text-align: center; color: #f28a0a;">Деталі Замовлення</h2>
                 <p><strong>Прізвище:</strong> ${req.body.lastName}</p>
                 <p><strong>Ім'я:</strong> ${req.body.firstName}</p>
@@ -344,6 +346,54 @@ app.patch('/items/:id', async (req, res) => {
     } catch (error) {
         console.error('Помилка при редагуванні товару:', error);
         res.status(500).json({ message: 'Помилка сервера' });
+    }
+});
+
+app.get('/promo', async (req, res) => {
+    try {
+        const items = await Promo.find();
+        console.log(items);
+
+        res.json({ items });
+    } catch (error) {
+        res.status(500).json({ message: 'Помилка при отриманні даних', error });
+    }
+});
+
+
+app.post('/promo', async (req, res) => {
+    try {
+        const { code } = req.body;
+        console.log(req.body);
+
+        const promo = await Promo.findOne({ code });
+
+        if (!promo) {
+            return res.status(500).json({ message: "Промокод не знайдено" });
+        }
+
+        if (promo.isUsed) {
+            return res.status(400).json({ message: "Промокод вже використано" });
+        }
+
+        promo.isUsed = true;
+        await promo.save();
+
+        res.json({ message: "Промокод застосовано", promo });
+
+    } catch (error) {
+        console.error("Помилка:", error);
+        res.status(500).json({ message: "Помилка сервера" });
+    }
+});
+
+app.post("/create_promo", async (req, res) => {
+    try {
+        const promo = new Promo(req.body);
+        await promo.save();
+        res.status(201).json(promo);
+    } catch (error) {
+        res.status(400).json({ error: error.message });
     }
 });
 
